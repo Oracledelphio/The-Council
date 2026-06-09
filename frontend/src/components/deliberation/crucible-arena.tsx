@@ -10,6 +10,8 @@ interface CrucibleArenaProps {
   inquisitorStreaming: boolean;
   inquisitorDone: boolean;
   isActive: boolean;
+  advocateTitle?: string;
+  inquisitorTitle?: string;
 }
 
 export function CrucibleArena({
@@ -20,22 +22,26 @@ export function CrucibleArena({
   inquisitorStreaming,
   inquisitorDone,
   isActive,
+  advocateTitle = "Advocate",
+  inquisitorTitle = "Inquisitor"
 }: CrucibleArenaProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <AgentCard
         role="advocate"
+        title={advocateTitle}
         text={advocateText}
         isStreaming={advocateStreaming}
         isDone={advocateDone}
-        isActive={isActive}
+        isActive={isActive && !advocateDone}
       />
       <AgentCard
         role="inquisitor"
+        title={inquisitorTitle}
         text={inquisitorText}
         isStreaming={inquisitorStreaming}
         isDone={inquisitorDone}
-        isActive={isActive}
+        isActive={isActive && advocateDone && !inquisitorDone}
       />
     </div>
   );

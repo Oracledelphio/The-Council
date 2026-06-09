@@ -11,6 +11,7 @@ interface AgentCardProps {
   isStreaming: boolean;
   isDone: boolean;
   isActive: boolean;
+  title?: string;
 }
 
 export function AgentCard({
@@ -19,6 +20,7 @@ export function AgentCard({
   isStreaming,
   isDone,
   isActive,
+  title,
 }: AgentCardProps) {
   const config = AGENT_CONFIG[role];
 
@@ -56,7 +58,7 @@ export function AgentCard({
               className="font-[family-name:var(--font-heading)] font-semibold text-sm"
               style={{ color: config.color }}
             >
-              {config.label}
+              {title || config.label}
             </h3>
             <p className="text-xs text-white/30">{config.subtitle}</p>
           </div>
@@ -82,7 +84,7 @@ export function AgentCard({
           </div>
         )}
         {!text && isStreaming && (
-          <ThinkingIndicator color={config.color} label={config.label} />
+          <ThinkingIndicator color={config.color} label={title || config.label} />
         )}
         {text && (
           <p

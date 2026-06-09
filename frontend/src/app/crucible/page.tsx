@@ -9,9 +9,13 @@ import { CrucibleArena } from "@/components/deliberation/crucible-arena";
 import { VerdictDashboard } from "@/components/verdict/verdict-dashboard";
 import { Timeline } from "@/components/deliberation/timeline";
 
+import { PRESETS } from "@/lib/types";
+import { CouncilSelector } from "@/components/proposal/council-selector";
+
 export default function CruciblePage() {
   const deliberation = useDeliberation();
-  const { status } = deliberation;
+  const { status, preset, setPreset } = deliberation;
+  const currentPreset = PRESETS[preset];
 
   const isDeliberating =
     status === "EXTRACTING" ||
@@ -20,9 +24,9 @@ export default function CruciblePage() {
     status === "COMPLETE";
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen">
+    <main className="flex-1 flex flex-col min-h-screen print:bg-white print:text-black">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+      <header className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] print:hidden">
         <Link
           href="/"
           className="flex items-center gap-2 text-white/60 hover:text-white/90 transition-colors"
@@ -68,8 +72,8 @@ export default function CruciblePage() {
       </header>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col items-center px-4 sm:px-6 py-8 overflow-y-auto">
-        <div className="w-full max-w-5xl mx-auto space-y-6">
+      <div className="flex-1 flex flex-col items-center px-4 sm:px-6 py-8 overflow-y-auto print:p-0 print:overflow-visible">
+        <div className="w-full max-w-5xl mx-auto space-y-6 print:hidden">
           <AnimatePresence mode="wait">
             {/* Phase: IDLE — Show proposal form */}
             {status === "IDLE" && (
@@ -79,8 +83,9 @@ export default function CruciblePage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="flex-1 flex items-center justify-center pt-16"
+                className="flex flex-col items-center justify-center pt-8"
               >
+                <CouncilSelector selected={preset} onSelect={setPreset} />
                 <ProposalForm
                   onSubmit={deliberation.startDeliberation}
                   isDisabled={false}
@@ -109,6 +114,9 @@ export default function CruciblePage() {
                   <span className="text-xs font-medium text-white/30 uppercase tracking-[0.15em]">
                     Proposal Under Review
                   </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.05] text-white/50 border border-white/[0.1]">
+                    {currentPreset.name}
+                  </span>
                 </div>
                 <p className="text-sm text-white/60 leading-relaxed line-clamp-3">
                   {deliberation.proposal}
@@ -136,6 +144,8 @@ export default function CruciblePage() {
                     status === "JUDGING" ||
                     status === "COMPLETE"
                   }
+                  advocateTitle={currentPreset.advocate_title}
+                  inquisitorTitle={currentPreset.inquisitor_title}
                 />
               )}
 
@@ -143,8 +153,14 @@ export default function CruciblePage() {
               {(status === "JUDGING" || status === "COMPLETE") && (
                 <VerdictDashboard
                   data={deliberation.verdictData!}
-                  arbitratorText={deliberation.arbitrator.text}
-                  isStreaming={deliberation.arbitrator.isStreaming}
+                  arbitratorText=""
+                  isStreaming={status === "JUDGING"}
+                  arbitratorTitle={currentPreset.arbitrator_title}
+                  preset={currentPreset}
+                  proposal={deliberation.proposal}
+                  claims={deliberation.evidence}
+                  advocateText={deliberation.advocate.text}
+                  inquisitorText={deliberation.inquisitor.text}
                 />
               )}
 

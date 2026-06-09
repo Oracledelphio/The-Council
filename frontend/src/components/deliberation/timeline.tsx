@@ -10,7 +10,8 @@ interface TimelineProps {
 const STEPS = [
   { id: "IDLE", label: "Proposal Submitted" },
   { id: "EXTRACTING", label: "Claims Extracted" },
-  { id: "DELIBERATING", label: "Council Deliberation" },
+  { id: "DELIBERATING_ADV", label: "Advocate Case" },
+  { id: "DELIBERATING_INQ", label: "Inquisitor Challenge" },
   { id: "JUDGING", label: "Arbitrator Review" },
   { id: "COMPLETE", label: "Verdict Delivered" },
 ];
@@ -18,7 +19,11 @@ const STEPS = [
 export function Timeline({ status }: TimelineProps) {
   if (status === "IDLE") return null;
 
-  const currentIndex = STEPS.findIndex((s) => s.id === status);
+  let currentIndex = 0;
+  if (status === "EXTRACTING") currentIndex = 1;
+  else if (status === "DELIBERATING") currentIndex = 3; // Both advocate and inquisitor in parallel
+  else if (status === "JUDGING") currentIndex = 4;
+  else if (status === "COMPLETE") currentIndex = 5;
 
   return (
     <motion.div

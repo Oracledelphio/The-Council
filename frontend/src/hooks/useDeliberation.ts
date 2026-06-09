@@ -3,13 +3,16 @@
 import { useCallback, useState, useEffect } from "react";
 import { useStreamReader } from "./useStreamReader";
 import { API_BASE_URL } from "@/lib/constants";
+import { PRESETS } from "@/lib/types";
 import type {
   DeliberationState,
   EvidenceClaim,
   VerdictData,
+  CouncilPresetType,
 } from "@/lib/types";
 
 export function useDeliberation() {
+  const [preset, setPreset] = useState<CouncilPresetType>("INVESTOR");
   const [status, setStatus] = useState<DeliberationState>("IDLE");
   const [proposal, setProposal] = useState("");
   const [evidence, setEvidence] = useState<EvidenceClaim[]>([]);
@@ -43,7 +46,7 @@ export function useDeliberation() {
             next[claimIdx] = {
               ...next[claimIdx],
               status: "CHALLENGED",
-              attackedBy: "Inquisitor",
+              attackedBy: PRESETS[preset].inquisitor_title,
             };
           }
           return next;
@@ -67,7 +70,7 @@ export function useDeliberation() {
         const extractRes = await fetch(`${API_BASE_URL}/api/v1/extract`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ proposal: proposalText }),
+          body: JSON.stringify({ proposal: proposalText, preset_id: preset }),
         });
 
         if (!extractRes.ok) {
@@ -78,7 +81,7 @@ export function useDeliberation() {
         const { claims } = await extractRes.json();
         const evidenceClaims: EvidenceClaim[] = claims.map(
           (text: string, i: number) => ({
-            id: i,
+            id: i + 1,
             text,
             status: "SUPPORTED",
             attackedBy: null,
@@ -92,7 +95,7 @@ export function useDeliberation() {
         const advocateRes = fetch(`${API_BASE_URL}/api/v1/advocate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ proposal: proposalText }),
+          body: JSON.stringify({ proposal: proposalText, preset_id: preset }),
         });
 
         const inquisitorRes = fetch(`${API_BASE_URL}/api/v1/inquisitor`, {
@@ -101,6 +104,7 @@ export function useDeliberation() {
           body: JSON.stringify({
             proposal: proposalText,
             claims: claims,
+            preset_id: preset
           }),
         });
 
@@ -121,75 +125,75 @@ export function useDeliberation() {
         // ── Phase 3: Arbitrator verdict ──
         setStatus("JUDGING");
 
-        const arbitratorRes = await fetch(
-          `${API_BASE_URL}/api/v1/arbitrator`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              proposal: proposalText,
-              advocate_text: advocateText,
-              inquisitor_text: inquisitorText,
-            }),
-          }
-        );
-
-        if (!arbitratorRes.ok) throw new Error("Arbitrator streaming failed");
-
-        const arbitratorText = await arbitrator.startStream(arbitratorRes);
-
-        // ── Phase 4: Parse verdict ──
+        let parsed: VerdictData;
         try {
-          // Find the outermost { and } to extract the JSON object, ignoring any conversational text
-          const match = arbitratorText.match(/\{[\s\S]*\}/);
-          const cleanText = match ? match[0] : arbitratorText.replace(/```json/gi, "").replace(/```/gi, "").trim();
-          
-          const parsed = JSON.parse(cleanText) as VerdictData;
-          setVerdictData(parsed);
+          const arbitratorRes = await fetch(
+            `${API_BASE_URL}/api/v1/arbitrator`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                proposal: proposalText,
+                advocate_text: advocateText,
+                inquisitor_text: inquisitorText,
+                preset_id: preset
+              }),
+            }
+          );
 
-          if (parsed.invalidated_claim_id !== null) {
-            const idx = parsed.invalidated_claim_id - 1;
-            setEvidence((prev) => {
-              const next = [...prev];
-              if (next[idx]) {
-                next[idx] = { ...next[idx], status: "INVALIDATED" };
-              }
-              return next;
-            });
-          }
+          if (!arbitratorRes.ok) throw new Error("Arbitrator failed to generate a verdict");
+          parsed = await arbitratorRes.json() as VerdictData;
         } catch (e) {
-          console.error("Failed to parse Arbitrator JSON:", e);
-          // Hackathon Demo Safety: Never crash. Use a resilient fallback.
-          setVerdictData({
-            verdict: "FUND",
-            confidence: 70,
+          console.error("Failed to fetch Arbitrator verdict:", e);
+          parsed = {
+            verdict: "UNAVAILABLE",
+            confidence: 0,
             fatal_flaw: "The Arbitrator's reasoning matrix encountered a formatting anomaly.",
             asymmetric_upside: "The proposal survives due to systemic resilience.",
             winning_argument: "When rigid systems fail, human judgment must prevail.",
             winning_side: "ADVOCATE",
-            invalidated_claim_id: null,
+            winning_claim_id: null,
             rationale: "The Arbitrator's structured output was corrupted during transmission. However, the core logic indicates a net-positive expected value. The Council defaults to action."
-          });
+          };
+        }
+
+        setVerdictData(parsed);
+
+        if (parsed.winning_claim_id) {
+          // Find the claim ID number (e.g. "C2" -> 2, "2" -> 2)
+          const idMatch = parsed.winning_claim_id.match(/\d+/);
+          if (idMatch) {
+            const claimId = parseInt(idMatch[0], 10);
+            const idx = claimId - 1;
+            if (parsed.winning_side === "INQUISITOR") {
+               setEvidence((prev) => {
+                const next = [...prev];
+                if (next[idx]) {
+                  next[idx] = { ...next[idx], status: "INVALIDATED" };
+                }
+                return next;
+               });
+            }
+          }
         }
 
         setStatus("COMPLETE");
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : "An unexpected error occurred";
-        // If it's a generic fetch TypeError (Network Error), mask it with the graceful message
         if (errorMsg === "Failed to fetch" || errorMsg === "NetworkError when attempting to fetch resource.") {
           setError("The Council is experiencing unusually high demand. Please try again in a moment.");
         } else {
           setError(errorMsg);
         }
-        
-        // Do not reset to IDLE if we are deep in deliberation, so the user can actually see the error.
         setStatus("COMPLETE");
       }
     },
-    [advocate, inquisitor, arbitrator]
+    [advocate, inquisitor, arbitrator, preset]
   );
 
   return {
+    preset,
+    setPreset,
     status,
     proposal,
     evidence,

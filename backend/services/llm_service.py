@@ -48,6 +48,8 @@ async def stream_chat_completion(
         response_mime_type=response_mime_type,
     )
     
+    has_yielded = False
+    
     for attempt, delay in enumerate(RETRY_DELAYS, 1):
         if delay > 0:
             await asyncio.sleep(delay)
@@ -61,6 +63,7 @@ async def stream_chat_completion(
             
             async for chunk in response:
                 if chunk.text:
+                    has_yielded = True
                     yield chunk.text
                     
             if attempt > 1:
@@ -68,6 +71,13 @@ async def stream_chat_completion(
             return
             
         except Exception as e:
+            if has_yielded:
+                # If we already sent partial chunks to the client, we CANNOT retry, 
+                # because the client's string will be garbled (e.g. half JSON + new JSON).
+                # We just have to let the stream terminate early and rely on frontend fallbacks.
+                print(f"[{agent_name}] Stream interrupted mid-flight: {e}")
+                return
+                
             if not is_transient_error(e):
                 print(f"[{agent_name}] Fatal error: {e}")
                 if fallback_text:
@@ -85,13 +95,16 @@ async def stream_chat_completion(
 async def get_chat_completion(
     system_prompt: str, 
     user_prompt: str, 
-    agent_name: str = "Extractor"
+    agent_name: str = "Extractor",
+    response_mime_type: str | None = None,
+    max_output_tokens: int = 500
 ) -> str:
     """Non-streaming Gemini call with custom exponential backoff."""
     config = types.GenerateContentConfig(
         system_instruction=system_prompt,
         temperature=0.4,
-        max_output_tokens=200,
+        max_output_tokens=max_output_tokens,
+        response_mime_type=response_mime_type
     )
     
     for attempt, delay in enumerate(RETRY_DELAYS, 1):
