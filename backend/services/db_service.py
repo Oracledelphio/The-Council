@@ -109,6 +109,15 @@ class DatabaseService:
             decision["_id"] = str(decision["_id"])
         return decision
 
+    async def delete_decision(self, decision_id: str) -> bool:
+        """Permanently delete a decision."""
+        collection = await self.get_collection()
+        if collection is None:
+            return False
+            
+        result = await collection.delete_one({"decision_id": decision_id})
+        return result.deleted_count > 0
+
     async def search_similar_decisions(self, query: str, limit: int = 3) -> List[Dict[str, Any]]:
         """
         Search for similar historical decisions.

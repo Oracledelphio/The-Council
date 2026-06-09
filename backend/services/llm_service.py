@@ -80,14 +80,18 @@ async def stream_chat_completion(
                 
             if not is_transient_error(e):
                 print(f"[{agent_name}] Fatal error: {e}")
-                if fallback_text:
+                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower():
+                    yield "Free tier API Quota exceeded. Please try again later."
+                elif fallback_text:
                     yield fallback_text
                 return
                 
             print(f"[{agent_name}] Retry {attempt}/{len(RETRY_DELAYS)} after error: {e}")
             if attempt == len(RETRY_DELAYS):
                 print(f"[{agent_name}] Failed after {len(RETRY_DELAYS)} attempts")
-                if fallback_text:
+                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower():
+                    yield "Free tier API Quota exceeded. Please try again later."
+                elif fallback_text:
                     yield fallback_text
                 return
 

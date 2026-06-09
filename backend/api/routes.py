@@ -45,6 +45,9 @@ async def extract_claims(req: ProposalRequest):
         claims = await extract_evidence(req.proposal)
         return {"claims": claims}
     except Exception as e:
+        error_msg = str(e)
+        if "429" in error_msg or "RESOURCE_EXHAUSTED" in error_msg or "quota" in error_msg.lower():
+            raise HTTPException(status_code=429, detail="Free tier API Quota exceeded. Please try again later.")
         raise HTTPException(status_code=503, detail="The Council is experiencing unusually high demand. Please try again in a moment.")
 
 
@@ -160,6 +163,10 @@ async def arbitrator_evaluate(req: ArbitratorRequest):
         parsed_json["_debug_clean_text"] = clean_text
     except Exception as e:
         print(f"[{preset.arbitrator_title}] Failed to generate or parse JSON: {e}")
+        error_msg = str(e)
+        if "429" in error_msg or "RESOURCE_EXHAUSTED" in error_msg or "quota" in error_msg.lower():
+            fallback_json["rationale"] = "Free tier API Quota exceeded. Please try again later."
+            fallback_json["fatal_flaw"] = "API Quota Limit Reached."
         fallback_json["_debug_error"] = str(e)
         return fallback_json
 
@@ -220,3 +227,10 @@ async def get_decision(decision_id: str):
 @router.get("/analytics")
 async def get_analytics():
     return await db.get_analytics_metrics()
+
+@router.delete("/decisions/{decision_id}")
+async def delete_decision(decision_id: str):
+    success = await db.delete_decision(decision_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Decision not found")
+    return {"status": "success", "message": "Decision deleted"}
