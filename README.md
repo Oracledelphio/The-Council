@@ -1,118 +1,164 @@
-<div align="center">
-  <img src="./frontend/public/window.svg" alt="Council AI Logo" width="120" />
-  <h1>The Council AI</h1>
-  <p><strong>"Don't Ask One AI. Ask The Council."</strong></p>
+# ⚖️ Council AI
+> **Don't Ask One AI. Ask the Council.**
 
-  <p>
-    <a href="#about">About</a> •
-    <a href="#features">Features</a> •
-    <a href="#architecture">Architecture</a> •
-    <a href="#quick-start">Quick Start</a>
-  </p>
+[![Google Cloud](https://img.shields.io/badge/GoogleCloud-Gemini_Flash-blue?style=for-the-badge)](https://cloud.google.com/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_Vector-green?style=for-the-badge)](https://www.mongodb.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge)](https://fastapi.tiangolo.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-Frontend-black?style=for-the-badge)](https://nextjs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-  <p>
-    <img alt="Next.js" src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white" />
-    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi" />
-    <img alt="Gemini API" src="https://img.shields.io/badge/Gemini-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white" />
-    <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
-  </p>
-</div>
+Council AI transforms decision-making from a solitary, biased guess into a rigorous, multi-agent adversarial deliberation. By pitting specialized AI agents against each other—an **Advocate** to defend the proposal and an **Inquisitor** to tear it down—Council AI extracts the hidden fatal flaws and asymmetric upside of any idea before presenting the facts to the **Arbitrator** for a final, impartial verdict. 
 
-<br />
-
-## 🏛️ About The Council
-
-**The Council AI** transforms the traditional "chatbot" paradigm into a high-stakes, adversarial decision intelligence platform. Instead of receiving a single, polite answer from a language model, users submit proposals to a simulated board of domain experts. 
-
-These specialized AI agents rigorously debate the merits of your proposal in real-time. An impartial Arbitrator then parses the core evidence, evaluates the debate, and delivers a final, mathematically sound ruling. 
-
-Designed for the **Microsoft Agents League Hackathon**, The Council AI delivers an enterprise-grade boardroom experience, stripping away conversational pleasantries to focus purely on stress-testing ideas.
-
-<br />
-
-## ✨ Features
-
-- **🎭 Dynamic Council Presets**: Instantly reconfigure the board's expertise before submitting a proposal.
-  - **Investor Panel:** Venture Capitalist vs. Short Seller (Verdict: FUND/KILL)
-  - **Product Review Board:** Product Strategist vs. QA Director (Verdict: APPROVE/REJECT)
-  - **Executive Council:** Growth Exec vs. Risk Exec (Verdict: PROCEED/HALT)
-- **⚡ Live Streaming Deliberation**: Watch the Advocate and Inquisitor debate your proposal in real-time with synchronized UI state management.
-- **🔍 Reasoning Visibility**: The backend automatically extracts "Core Claims" from your proposal and maps them to a structured Evidence Board, showing exactly which claims were supported or successfully attacked.
-- **📊 Zero-Dependency PDF Export**: Generate a stunning, McKinsey-style executive white paper of the final verdict using advanced CSS `@media print` utilities directly from the dashboard.
-- **🛡️ Enterprise Reliability**: Custom exponential backoff, graceful API degradation, and transient error catching ensure the platform survives network blips and API rate limits.
-
-<br />
-
-## ⚙️ Architecture
-
-The system is fully decoupled into a **Next.js frontend** and a **FastAPI backend**.
-
-1. **Frontend (Next.js + Tailwind + Framer Motion)**
-   - Manages the complex state machine (Idle -> Extracting -> Deliberating -> Judging -> Complete).
-   - Handles parallel asynchronous streaming of agent responses.
-   - Beautiful, dark-mode boardroom aesthetic with glassmorphism and subtle animations.
-
-2. **Backend (Python + FastAPI + Google Gemini 2.5 Flash)**
-   - Factory pattern for dynamic system prompt generation based on active Council presets.
-   - Pipelined AI reasoning:
-     1. *Claim Extraction* (Structured JSON)
-     2. *Advocate Case* (Streaming Text)
-     3. *Inquisitor Challenge* (Streaming Text)
-     4. *Arbitrator Ruling* (Structured JSON)
-
-<br />
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+
-- Python 3.10+
-- A Google Gemini API Key
-
-### 1. Start the Backend
-
-```bash
-cd backend
-python -m venv venv
-
-# Activate the virtual environment
-venv\Scripts\activate       # Windows
-# source venv/bin/activate  # macOS/Linux
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Setup environment variables
-cp .env.example .env        
-# Edit .env and add your GEMINI_API_KEY
-
-# Run the server
-uvicorn main:app --reload --port 8000
-```
-
-### 2. Start the Frontend
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Setup environment variables
-cp .env.local.example .env.local
-# Ensure NEXT_PUBLIC_API_URL=http://localhost:8000
-
-# Run the development server
-npm run dev
-```
-
-### 3. Deliberate
-Open [http://localhost:3000](http://localhost:3000) in your browser. Select your Council, submit a proposal, and face the judgment.
-
-<br />
+Built for the **Google Cloud Rapid Agent Hackathon (MongoDB Track)**.
 
 ---
 
-<div align="center">
-  <i>"When rigid systems fail, human judgment must prevail."</i>
-</div>
+## 🛑 The Problem
+
+Solo founders, startup teams, executives, and students face a constant battle against **Decision Paralysis** and **Confirmation Bias**. 
+
+When using standard AI models (like ChatGPT or Gemini) to evaluate an idea, the AI acts as a sycophant—it agrees with the user, validates their assumptions, and rarely provides the harsh, critical pushback required to prevent catastrophic failures. You don't need a yes-man; you need a stress test.
+
+## 💡 The Solution
+
+Council AI solves the "sycophant problem" by implementing **Adversarial Deliberation**. 
+
+Instead of asking one AI for its opinion, Council AI orchestrates a specialized panel:
+1. **The Advocate:** A specialized Gemini agent that structurally defends the proposal, highlights the upside, and builds the strongest possible case.
+2. **The Inquisitor:** A ruthless, adversarial Gemini agent mandated to identify the single weakest assumption in the proposal and systematically destroy it.
+3. **The Arbitrator:** An impartial executive agent that evaluates the arguments, scores the confidence, and issues a final, binding verdict (FUND/KILL, APPROVE/REJECT).
+
+*Structured disagreement produces superior outcomes.*
+
+---
+
+## ✨ Core Features
+
+- **Multi-Agent Deliberation:** Observe agents debating in real-time.
+- **Claim Extraction:** Automatically extracts core assumptions from unstructured proposals.
+- **Adversarial Challenge System:** Real-time highlighting of which claims are successfully defended vs. destroyed.
+- **Arbitration Engine:** Deterministic JSON verdicts with rationale and fatal flaw analysis.
+- **Institutional Memory:** MongoDB-backed storage of all past deliberations.
+- **Historical Precedent Retrieval:** Automatically retrieves similar past decisions to inform current deliberations.
+- **Executive Analytics Dashboard:** Real-time visualizations of council verdicts, approval rates, and deliberation metrics.
+- **PDF Report Export:** Generate professional, investor-ready executive summaries of any deliberation.
+- **MongoDB-Powered Decision Intelligence:** Turns a chatbot into a persistent enterprise platform.
+
+---
+
+## 🏛️ Architecture
+
+```mermaid
+graph TD
+    User[User] -->|Submits Proposal| Frontend
+    Frontend[Next.js + Tailwind Frontend] -->|REST API| Backend
+    
+    subgraph Backend [FastAPI + Gemini Application]
+        Router[API Router]
+        Claims[Claim Extractor Agent]
+        Advocate[Advocate Agent]
+        Inquisitor[Inquisitor Agent]
+        Arbitrator[Arbitrator Agent]
+        
+        Router --> Claims
+        Router --> Advocate
+        Router --> Inquisitor
+        Advocate --> Arbitrator
+        Inquisitor --> Arbitrator
+    end
+    
+    Backend -->|Stores & Retrieves| DB[(MongoDB Atlas)]
+    DB -->|Historical Precedents| Router
+    DB -->|Analytics Aggregation| Router
+```
+
+### 🛠️ Tech Stack
+- **Frontend:** Next.js 14, React, Tailwind CSS, Framer Motion
+- **Backend:** Python, FastAPI, Google Gemini SDK (Gemini 2.5 Flash), asyncio
+- **Database:** MongoDB Atlas, Motor (Asyncio Driver)
+
+---
+
+## 🍃 MongoDB Integration
+
+MongoDB is the core engine that elevates Council AI from a transient "chatbot toy" into a **Persistent Decision Intelligence Platform**. 
+
+**Why MongoDB is Critical:**
+1. **Persistent Decision Storage:** Every claim, argument, and verdict is stored in highly flexible BSON documents, perfectly accommodating the dynamic length of AI text generation.
+2. **Historical Precedents:** We query MongoDB to instantly retrieve past decisions, allowing the Arbitrator to maintain consistency across the organization's history.
+3. **Institutional Memory:** Companies lose knowledge when employees leave. MongoDB ensures every decision and its rationale is permanently recorded.
+4. **Analytics Aggregations:** We utilize MongoDB Aggregation Pipelines to calculate real-time approval rates, confidence intervals, and agent performance.
+
+---
+
+## 📸 Screenshots
+
+| Dashboard & Precedents | Adversarial Deliberation |
+|:---:|:---:|
+| ![Home Screen](./docs/home.png) <br> *Home screen showing active councils.* | ![Deliberation Flow](./docs/deliberation.png) <br> *Real-time streaming debate.* |
+
+| Executive Verdict | Analytics Dashboard |
+|:---:|:---:|
+| ![Verdict Screen](./docs/verdict.png) <br> *Final Arbitrator verdict.* | ![Analytics Dashboard](./docs/analytics.png) <br> *MongoDB-powered insights.* |
+
+---
+
+## 🚀 Installation & Local Development
+
+### Prerequisites
+- Node.js 18+
+- Python 3.12+
+- MongoDB Atlas Account
+- Google Gemini API Key
+
+### Backend Setup
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+```
+
+### Environment Variables
+Create a `.env` file in the `backend` directory based on `.env.example`:
+```env
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-2.5-flash
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/?retryWrites=true&w=majority
+MONGODB_DB_NAME=council_ai
+```
+
+### Running the Application
+**Start Backend:**
+```bash
+cd backend
+uvicorn main:app --reload
+```
+
+**Start Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+Navigate to `http://localhost:3000`.
+
+---
+
+## 🗺️ Future Roadmap
+
+- **Atlas Vector Search:** Implement RAG using MongoDB Atlas Vector Search to allow agents to cite external documents, research papers, and company wikis during deliberations.
+- **Voyage AI Embeddings:** Integrate state-of-the-art embedding models to drastically improve historical precedent matching accuracy.
+- **Organizational Memory:** Enable teams to upvote/downvote Arbitrator verdicts, training the system on company culture over time.
+- **Decision Outcome Tracking:** Allow users to update past decisions 6 months later with "What actually happened," allowing the Arbitrator to calibrate its accuracy.
+- **Team Councils:** Multiplayer mode where human users can step in and take over the role of Advocate or Inquisitor.
+
+---
+
+<p align="center">Made with ❤️ for the Google Cloud Rapid Agent Hackathon.</p>
