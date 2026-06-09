@@ -9,6 +9,7 @@ import type {
   EvidenceClaim,
   VerdictData,
   CouncilPresetType,
+  DecisionRecord,
 } from "@/lib/types";
 
 export function useDeliberation() {
@@ -18,6 +19,7 @@ export function useDeliberation() {
   const [evidence, setEvidence] = useState<EvidenceClaim[]>([]);
   const [verdictData, setVerdictData] = useState<VerdictData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [similarDecisions, setSimilarDecisions] = useState<DecisionRecord[]>([]);
 
   const advocate = useStreamReader();
   const inquisitor = useStreamReader();
@@ -29,6 +31,7 @@ export function useDeliberation() {
     setEvidence([]);
     setVerdictData(null);
     setError(null);
+    setSimilarDecisions([]);
     advocate.reset();
     inquisitor.reset();
     arbitrator.reset();
@@ -37,23 +40,28 @@ export function useDeliberation() {
   // Real-time tracking of Inquisitor's targeted claim
   useEffect(() => {
     if (status === "DELIBERATING" && inquisitor.text) {
-      const match = inquisitor.text.match(/\[TARGETED_CLAIM:\s*(\d+)\]/i);
+      const match = inquisitor.text.match(/TARGETED CLAIM:\s*(?:[\*\-\d\.]*\s*)?([^\n]+)/i);
       if (match) {
-        const claimIdx = parseInt(match[1], 10) - 1;
+        const extractedClaim = match[1].trim().toLowerCase();
+        
         setEvidence((prev) => {
           const next = [...prev];
-          if (next[claimIdx] && next[claimIdx].status === "SUPPORTED") {
-            next[claimIdx] = {
-              ...next[claimIdx],
-              status: "CHALLENGED",
-              attackedBy: PRESETS[preset].inquisitor_title,
-            };
+          const claimIdx = next.findIndex(e => extractedClaim.includes(e.text.toLowerCase()) || e.text.toLowerCase().includes(extractedClaim));
+
+          if (claimIdx >= 0 && claimIdx < next.length) {
+            if (next[claimIdx].status === "SUPPORTED") {
+              next[claimIdx] = {
+                ...next[claimIdx],
+                status: "CHALLENGED",
+                attackedBy: PRESETS[preset].inquisitor_title,
+              };
+            }
           }
           return next;
         });
       }
     }
-  }, [inquisitor.text, status]);
+  }, [inquisitor.text, status, preset]);
 
   const startDeliberation = useCallback(
     async (proposalText: string) => {
@@ -64,6 +72,7 @@ export function useDeliberation() {
         inquisitor.reset();
         arbitrator.reset();
         setVerdictData(null);
+        setSimilarDecisions([]);
 
         // ── Phase 1: Extract evidence ──
         setStatus("EXTRACTING");
@@ -88,6 +97,14 @@ export function useDeliberation() {
           })
         );
         setEvidence(evidenceClaims);
+
+        // Fetch Similar Decisions concurrently
+        fetch(`${API_BASE_URL}/api/v1/decisions/search?query=${encodeURIComponent(proposalText)}&limit=3`)
+          .then(res => res.json())
+          .then(data => {
+            if (Array.isArray(data)) setSimilarDecisions(data);
+          })
+          .catch(e => console.error("Failed to fetch precedents", e));
 
         // ── Phase 2: Parallel Advocate + Inquisitor ──
         setStatus("DELIBERATING");
@@ -125,6 +142,11 @@ export function useDeliberation() {
         // ── Phase 3: Arbitrator verdict ──
         setStatus("JUDGING");
 
+        // Format precedent text for the prompt
+        const precedentsText = similarDecisions
+          .map(d => `Decision: ${d.decision_id}\nProposal: ${d.proposal}\nVerdict: ${d.arbitrator.verdict}`)
+          .join("\n\n");
+
         let parsed: VerdictData;
         try {
           const arbitratorRes = await fetch(
@@ -136,7 +158,9 @@ export function useDeliberation() {
                 proposal: proposalText,
                 advocate_text: advocateText,
                 inquisitor_text: inquisitorText,
-                preset_id: preset
+                claims: claims,
+                preset_id: preset,
+                precedents: precedentsText
               }),
             }
           );
@@ -213,6 +237,7 @@ export function useDeliberation() {
       isDone: arbitrator.isDone,
     },
     verdictData,
+    similarDecisions,
     error,
     startDeliberation,
     reset,

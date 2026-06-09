@@ -72,3 +72,32 @@ export interface EvidenceClaim {
   status: ClaimStatus;
   attackedBy: string | null;
 }
+
+export interface DecisionRecord {
+  _id: string;
+  decision_id: string;
+  created_at: string;
+  council_type: string;
+  proposal: string;
+  claims: string[];
+  advocate: {
+    output: string;
+  };
+  inquisitor: {
+    output: string;
+  };
+  arbitrator: {
+    verdict: string;
+    confidence: number;
+    fatal_flaw: string;
+    asymmetric_upside: string;
+    rationale: string;
+  };
+}
+
+export interface AnalyticsMetrics {
+  total_decisions: number;
+  fund_rate: number;
+  kill_rate: number;
+  council_usage: Array<{ type: string; count: number }>;
+}

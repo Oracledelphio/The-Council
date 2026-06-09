@@ -33,7 +33,7 @@ You MUST output ONLY valid JSON matching this schema:
 }}"""
 
 def build_arbitrator_user_prompt(
-    proposal: str, advocate_text: str, inquisitor_text: str
+    proposal: str, advocate_text: str, inquisitor_text: str, precedents: str = ""
 ) -> str:
     return f"""THE PROPOSAL:
 <proposal>
@@ -50,4 +50,10 @@ THE INQUISITOR'S ARGUMENT:
 {inquisitor_text}
 </inquisitor_argument>
 
+{f'''HISTORICAL PRECEDENT:
+<precedent>
+{precedents}
+</precedent>
+The Council remembers past decisions. Use this institutional memory if it reveals relevant patterns, but judge THIS proposal on its own merits.
+''' if precedents else ""}
 Evaluate these arguments. Deliver your verdict using the EXACT JSON format specified. Be decisive. Be final."""

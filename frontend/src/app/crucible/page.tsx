@@ -24,7 +24,7 @@ export default function CruciblePage() {
     status === "COMPLETE";
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen print:bg-white print:text-black">
+    <main className="flex-1 flex flex-col h-full print:bg-white print:text-black">
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] print:hidden">
         <Link
@@ -126,6 +126,46 @@ export default function CruciblePage() {
               {/* Evidence Board */}
               {deliberation.evidence.length > 0 && (
                 <EvidenceBoard claims={deliberation.evidence} />
+              )}
+
+              {/* Similar Decisions Precedent */}
+              {deliberation.similarDecisions && deliberation.similarDecisions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 rounded-lg border border-[#D4AF37]/20 bg-[#D4AF37]/[0.02]"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-medium text-[#D4AF37]/60 uppercase tracking-[0.15em]">
+                      Similar Historical Precedents Found
+                    </span>
+                  </div>
+                  <div className="grid gap-2">
+                    {deliberation.similarDecisions.map(d => (
+                      <Link
+                        key={d.decision_id}
+                        href={`/decision/${d.decision_id}`}
+                        target="_blank"
+                        className="group flex items-center justify-between p-2 rounded bg-white/[0.02] border border-white/[0.04] hover:border-[#D4AF37]/30 transition-colors"
+                      >
+                        <span className="text-xs text-white/60 group-hover:text-white/90 truncate mr-4">
+                          {d.proposal}
+                        </span>
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded-sm font-medium whitespace-nowrap ${
+                            ["FUND", "APPROVE", "PROCEED"].includes(d.arbitrator.verdict)
+                              ? "bg-[#22C55E]/10 text-[#22C55E]"
+                              : ["KILL", "REJECT", "HALT"].includes(d.arbitrator.verdict)
+                              ? "bg-[#FF2A2A]/10 text-[#FF2A2A]"
+                              : "bg-white/10 text-white/60"
+                          }`}
+                        >
+                          {d.arbitrator.verdict}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
               )}
 
               {/* Crucible Arena */}
