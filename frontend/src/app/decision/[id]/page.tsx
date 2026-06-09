@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { API_BASE_URL } from "@/lib/constants";
 import type { DecisionRecord } from "@/lib/types";
+import { PRESETS } from "@/lib/types";
+import { ExecutiveReport } from "@/components/verdict/executive-report";
 
 export default function DecisionPage() {
   const { id } = useParams();
@@ -50,116 +52,133 @@ export default function DecisionPage() {
   const verdictColor = isPositive ? "text-[#22C55E]" : "text-[#FF2A2A]";
   const verdictBg = isPositive ? "bg-[#22C55E]/10" : "bg-[#FF2A2A]/10";
   const verdictBorder = isPositive ? "border-[#22C55E]/20" : "border-[#FF2A2A]/20";
+  
+  // Find preset by name
+  const presetKey = Object.keys(PRESETS).find(k => PRESETS[k as keyof typeof PRESETS].name === decision.council_type) as keyof typeof PRESETS;
+  const preset = presetKey ? PRESETS[presetKey] : PRESETS.product;
 
   return (
-    <div className="flex-1 overflow-y-auto print:bg-white print:text-black">
-      {/* Action Bar */}
-      <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-[#121212]/80 backdrop-blur-md print:hidden">
-        <div className="flex items-center gap-4">
-          <Link href="/crucible" className="text-white/50 hover:text-white transition-colors text-sm">
-            ← Back
-          </Link>
-          <span className="text-sm font-medium text-white/40">
-            {decision.decision_id}
-          </span>
-        </div>
-        <button
-          onClick={handlePrint}
-          className="px-4 py-1.5 rounded bg-white/10 text-white/80 text-sm font-medium hover:bg-white/20 transition-colors"
-        >
-          Export PDF
-        </button>
-      </div>
-
-      <div className="max-w-4xl mx-auto p-8 space-y-12">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.02] text-xs text-white/50 print:border-black/20 print:text-black/60 print:bg-transparent tracking-widest uppercase mb-4">
-            Council Executive Report
+    <>
+      <div className="flex-1 overflow-y-auto print:hidden">
+        {/* Action Bar */}
+        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-[#121212]/80 backdrop-blur-md">
+          <div className="flex items-center gap-4">
+            <Link href="/crucible" className="text-white/50 hover:text-white transition-colors text-sm">
+              ← Back
+            </Link>
+            <span className="text-sm font-medium text-white/40">
+              {decision.decision_id}
+            </span>
           </div>
-          <h1 className="text-4xl font-[family-name:var(--font-heading)] font-bold print:text-black">
-            {decision.council_type} Deliberation
-          </h1>
-          <p className="text-white/40 text-sm print:text-black/60">
-            Recorded on {new Date(decision.created_at).toLocaleString()}
-          </p>
+          <button
+            onClick={handlePrint}
+            className="px-4 py-1.5 rounded bg-white/10 text-white/80 text-sm font-medium hover:bg-white/20 transition-colors"
+          >
+            Export PDF
+          </button>
         </div>
 
-        {/* Verdict Banner */}
-        <div className={`p-6 rounded-xl border ${verdictBorder} ${verdictBg} flex flex-col items-center justify-center gap-2 text-center print:border-black/20 print:bg-transparent`}>
-          <span className="text-xs uppercase tracking-widest opacity-80 font-medium print:text-black">
-            Final Verdict
-          </span>
-          <span className={`text-5xl font-bold tracking-tight ${verdictColor}`}>
-            {decision.arbitrator.verdict}
-          </span>
-          <div className="mt-2 text-sm opacity-80 print:text-black">
-            Confidence: {decision.arbitrator.confidence}%
-          </div>
-        </div>
-
-        {/* Executive Summary */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] print:border-black/20 print:bg-transparent">
-            <h3 className="text-sm font-semibold text-[#00E5FF] mb-2 uppercase tracking-wider print:text-[#008B8B]">
-              Asymmetric Upside
-            </h3>
-            <p className="text-white/80 leading-relaxed text-sm print:text-black/80">
-              {decision.arbitrator.asymmetric_upside}
+        <div className="max-w-4xl mx-auto p-8 space-y-12">
+          {/* Header */}
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.02] text-xs text-white/50 tracking-widest uppercase mb-4">
+              Council Executive Report
+            </div>
+            <h1 className="text-4xl font-[family-name:var(--font-heading)] font-bold">
+              {decision.council_type} Deliberation
+            </h1>
+            <p className="text-white/40 text-sm">
+              Recorded on {new Date(decision.created_at).toLocaleString()}
             </p>
           </div>
-          <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] print:border-black/20 print:bg-transparent">
-            <h3 className="text-sm font-semibold text-[#FF2A2A] mb-2 uppercase tracking-wider print:text-[#B22222]">
-              Fatal Flaw
-            </h3>
-            <p className="text-white/80 leading-relaxed text-sm print:text-black/80">
-              {decision.arbitrator.fatal_flaw}
-            </p>
-          </div>
-        </div>
 
-        {/* Arbitrator Rationale */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2 print:border-black/20 print:text-black">
-            Arbitrator&apos;s Rationale
-          </h2>
-          <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap print:text-black/80">
-            {decision.arbitrator.rationale}
-          </p>
-        </div>
-
-        {/* Original Proposal */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2 print:border-black/20 print:text-black">
-            Original Proposal
-          </h2>
-          <div className="p-6 rounded-xl border border-white/[0.06] bg-[#1A1A1A] print:border-black/20 print:bg-transparent">
-            <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap print:text-black/80">
-              {decision.proposal}
-            </p>
-          </div>
-        </div>
-
-        {/* Transcripts */}
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <h2 className="text-sm font-[family-name:var(--font-heading)] font-semibold text-[#00E5FF] border-b border-[#00E5FF]/20 pb-2 print:text-[#008B8B] print:border-[#008B8B]/20">
-              Advocate Defense
-            </h2>
-            <div className="text-white/60 leading-relaxed text-xs whitespace-pre-wrap print:text-black/70">
-              {decision.advocate.output}
+          {/* Verdict Banner */}
+          <div className={`p-6 rounded-xl border ${verdictBorder} ${verdictBg} flex flex-col items-center justify-center gap-2 text-center`}>
+            <span className="text-xs uppercase tracking-widest opacity-80 font-medium">
+              Final Verdict
+            </span>
+            <span className={`text-5xl font-bold tracking-tight ${verdictColor}`}>
+              {decision.arbitrator.verdict}
+            </span>
+            <div className="mt-2 text-sm opacity-80">
+              Confidence: {decision.arbitrator.confidence}%
             </div>
           </div>
+
+          {/* Executive Summary */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <h3 className="text-sm font-semibold text-[#00E5FF] mb-2 uppercase tracking-wider">
+                Asymmetric Upside
+              </h3>
+              <p className="text-white/80 leading-relaxed text-sm">
+                {decision.arbitrator.asymmetric_upside}
+              </p>
+            </div>
+            <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <h3 className="text-sm font-semibold text-[#FF2A2A] mb-2 uppercase tracking-wider">
+                Fatal Flaw
+              </h3>
+              <p className="text-white/80 leading-relaxed text-sm">
+                {decision.arbitrator.fatal_flaw}
+              </p>
+            </div>
+          </div>
+
+          {/* Arbitrator Rationale */}
           <div className="space-y-4">
-            <h2 className="text-sm font-[family-name:var(--font-heading)] font-semibold text-[#FF2A2A] border-b border-[#FF2A2A]/20 pb-2 print:text-[#B22222] print:border-[#B22222]/20">
-              Inquisitor Attack
+            <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2">
+              Arbitrator&apos;s Rationale
             </h2>
-            <div className="text-white/60 leading-relaxed text-xs whitespace-pre-wrap print:text-black/70">
-              {decision.inquisitor.output}
+            <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap">
+              {decision.arbitrator.rationale}
+            </p>
+          </div>
+
+          {/* Original Proposal */}
+          <div className="space-y-4">
+            <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2">
+              Original Proposal
+            </h2>
+            <div className="p-6 rounded-xl border border-white/[0.06] bg-[#1A1A1A]">
+              <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap">
+                {decision.proposal}
+              </p>
+            </div>
+          </div>
+
+          {/* Transcripts */}
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <h2 className="text-sm font-[family-name:var(--font-heading)] font-semibold text-[#00E5FF] border-b border-[#00E5FF]/20 pb-2">
+                Advocate Defense
+              </h2>
+              <div className="text-white/60 leading-relaxed text-xs whitespace-pre-wrap">
+                {decision.advocate.output}
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h2 className="text-sm font-[family-name:var(--font-heading)] font-semibold text-[#FF2A2A] border-b border-[#FF2A2A]/20 pb-2">
+                Inquisitor Attack
+              </h2>
+              <div className="text-white/60 leading-relaxed text-xs whitespace-pre-wrap">
+                {decision.inquisitor.output}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      
+      {/* Print View: identical to live verdict export */}
+      <ExecutiveReport
+        data={decision.arbitrator as any}
+        preset={preset}
+        proposal={decision.proposal}
+        claims={decision.claims}
+        advocateText={decision.advocate.output}
+        inquisitorText={decision.inquisitor.output}
+        arbitratorText={""}
+      />
+    </>
   );
 }

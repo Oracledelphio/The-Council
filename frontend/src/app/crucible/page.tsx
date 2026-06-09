@@ -73,7 +73,7 @@ export default function CruciblePage() {
 
       {/* Content */}
       <div className="flex-1 flex flex-col items-center px-4 sm:px-6 py-8 overflow-y-auto print:p-0 print:overflow-visible">
-        <div className="w-full max-w-5xl mx-auto space-y-6 print:hidden">
+        <div className="w-full max-w-5xl mx-auto space-y-6">
           <AnimatePresence mode="wait">
             {/* Phase: IDLE — Show proposal form */}
             {status === "IDLE" && (
@@ -83,7 +83,7 @@ export default function CruciblePage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col items-center justify-center pt-8"
+                className="flex flex-col items-center justify-center pt-8 print:hidden"
               >
                 <CouncilSelector selected={preset} onSelect={setPreset} />
                 <ProposalForm
@@ -100,7 +100,7 @@ export default function CruciblePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="space-y-6"
+              className="space-y-6 print:hidden"
             >
               <Timeline status={status} />
 
@@ -177,21 +177,23 @@ export default function CruciblePage() {
               {(status === "DELIBERATING" ||
                 status === "JUDGING" ||
                 status === "COMPLETE") && (
-                <CrucibleArena
-                  advocateText={deliberation.advocate.text}
-                  advocateStreaming={deliberation.advocate.isStreaming}
-                  advocateDone={deliberation.advocate.isDone}
-                  inquisitorText={deliberation.inquisitor.text}
-                  inquisitorStreaming={deliberation.inquisitor.isStreaming}
-                  inquisitorDone={deliberation.inquisitor.isDone}
-                  isActive={
-                    status === "DELIBERATING" ||
-                    status === "JUDGING" ||
-                    status === "COMPLETE"
-                  }
-                  advocateTitle={currentPreset.advocate_title}
-                  inquisitorTitle={currentPreset.inquisitor_title}
-                />
+                <div className="print:hidden">
+                  <CrucibleArena
+                    advocateText={deliberation.advocate.text}
+                    advocateStreaming={deliberation.advocate.isStreaming}
+                    advocateDone={deliberation.advocate.isDone}
+                    inquisitorText={deliberation.inquisitor.text}
+                    inquisitorStreaming={deliberation.inquisitor.isStreaming}
+                    inquisitorDone={deliberation.inquisitor.isDone}
+                    isActive={
+                      status === "DELIBERATING" ||
+                      status === "JUDGING" ||
+                      status === "COMPLETE"
+                    }
+                    advocateTitle={currentPreset.advocate_title}
+                    inquisitorTitle={currentPreset.inquisitor_title}
+                  />
+                </div>
               )}
 
               {/* Verdict Dashboard */}
@@ -214,14 +216,14 @@ export default function CruciblePage() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="p-4 rounded-lg border border-[#FF2A2A]/20 bg-[#FF2A2A]/[0.04] text-sm text-[#FF2A2A]/80"
+                  className="p-4 rounded-lg border border-[#FF2A2A]/20 bg-[#FF2A2A]/[0.04] text-sm text-[#FF2A2A]/80 print:hidden"
                 >
                   ⚠ {deliberation.error}
                 </motion.div>
               )}
 
               {/* Developer Debug Toggle (Hidden until double clicked on the small dot) */}
-              <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
+              <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 print:hidden">
                 <div 
                   className="w-2 h-2 rounded-full bg-white/5 hover:bg-white/20 cursor-crosshair transition-colors"
                   onDoubleClick={() => {

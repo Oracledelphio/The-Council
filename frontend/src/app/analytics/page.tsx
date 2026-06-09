@@ -9,12 +9,22 @@ export default function AnalyticsDashboard() {
   const [metrics, setMetrics] = useState<AnalyticsMetrics | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchMetrics = () => {
     fetch(`${API_BASE_URL}/api/v1/analytics`)
       .then((res) => res.json())
       .then((data) => setMetrics(data))
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchMetrics();
+    window.addEventListener('decisionDeleted', fetchMetrics);
+    window.addEventListener('decisionAdded', fetchMetrics);
+    return () => {
+      window.removeEventListener('decisionDeleted', fetchMetrics);
+      window.removeEventListener('decisionAdded', fetchMetrics);
+    };
   }, []);
 
   if (loading) {
