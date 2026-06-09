@@ -146,21 +146,26 @@ export default function CruciblePage() {
                         key={d.decision_id}
                         href={`/decision/${d.decision_id}`}
                         target="_blank"
-                        className="group flex items-center justify-between p-2 rounded bg-white/[0.02] border border-white/[0.04] hover:border-[#D4AF37]/30 transition-colors"
+                        className="group flex flex-col p-3 rounded bg-white/[0.02] border border-white/[0.04] hover:border-[#D4AF37]/30 transition-colors"
                       >
-                        <span className="text-xs text-white/60 group-hover:text-white/90 truncate mr-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[10px] text-white/40 uppercase tracking-wider">
+                            {new Date(d.created_at).toLocaleDateString()} • {d.council_type}
+                          </span>
+                          <span
+                            className={`text-[10px] px-2 py-0.5 rounded-sm font-medium whitespace-nowrap ${
+                              ["FUND", "APPROVE", "PROCEED"].includes(d.arbitrator.verdict)
+                                ? "bg-[#22C55E]/10 text-[#22C55E]"
+                                : ["KILL", "REJECT", "HALT"].includes(d.arbitrator.verdict)
+                                ? "bg-[#FF2A2A]/10 text-[#FF2A2A]"
+                                : "bg-white/10 text-white/60"
+                            }`}
+                          >
+                            {d.arbitrator.verdict}
+                          </span>
+                        </div>
+                        <span className="text-xs text-white/60 group-hover:text-white/90 line-clamp-2 overflow-hidden w-full">
                           {d.proposal}
-                        </span>
-                        <span
-                          className={`text-[10px] px-2 py-0.5 rounded-sm font-medium whitespace-nowrap ${
-                            ["FUND", "APPROVE", "PROCEED"].includes(d.arbitrator.verdict)
-                              ? "bg-[#22C55E]/10 text-[#22C55E]"
-                              : ["KILL", "REJECT", "HALT"].includes(d.arbitrator.verdict)
-                              ? "bg-[#FF2A2A]/10 text-[#FF2A2A]"
-                              : "bg-white/10 text-white/60"
-                          }`}
-                        >
-                          {d.arbitrator.verdict}
                         </span>
                       </Link>
                     ))}
@@ -214,6 +219,40 @@ export default function CruciblePage() {
                   ⚠ {deliberation.error}
                 </motion.div>
               )}
+
+              {/* Developer Debug Toggle (Hidden until double clicked on the small dot) */}
+              <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full bg-white/5 hover:bg-white/20 cursor-crosshair transition-colors"
+                  onDoubleClick={() => {
+                    (window as any).debugMode = !(window as any).debugMode;
+                    document.getElementById("debug-panel")?.classList.toggle("hidden");
+                  }}
+                  title="Double-click for Developer Debug Mode"
+                />
+                <div id="debug-panel" className="hidden bg-black/90 p-4 rounded border border-[#00E5FF]/30 w-[400px] max-h-[500px] overflow-auto text-[10px] font-mono text-[#00E5FF]">
+                  <h3 className="font-bold mb-2 uppercase border-b border-[#00E5FF]/20 pb-1">Developer Debug Mode</h3>
+                  <div className="space-y-2">
+                    <div><strong>STATUS:</strong> {status}</div>
+                    <div><strong>ADVOCATE LEN:</strong> {deliberation.advocate.text.length}</div>
+                    <div><strong>INQUISITOR LEN:</strong> {deliberation.inquisitor.text.length}</div>
+                    <details>
+                      <summary>RAW ADVOCATE</summary>
+                      <pre className="whitespace-pre-wrap mt-1 opacity-70">{deliberation.advocate.text}</pre>
+                    </details>
+                    <details>
+                      <summary>RAW INQUISITOR</summary>
+                      <pre className="whitespace-pre-wrap mt-1 opacity-70">{deliberation.inquisitor.text}</pre>
+                    </details>
+                    <details>
+                      <summary>ARBITRATOR DEBUG DATA</summary>
+                      <pre className="whitespace-pre-wrap mt-1 opacity-70">
+                        {JSON.stringify((deliberation.verdictData as any)?._debug_raw_response || "N/A", null, 2)}
+                      </pre>
+                    </details>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           )}
         </div>

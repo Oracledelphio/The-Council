@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { AGENT_CONFIG } from "@/lib/constants";
 import { ThinkingIndicator } from "./thinking-indicator";
 import type { AgentRole } from "@/lib/types";
@@ -23,13 +24,17 @@ export function AgentCard({
   title,
 }: AgentCardProps) {
   const config = AGENT_CONFIG[role];
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Consider text "long" if it's over ~300 characters
+  const isLong = text.length > 300;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: isActive ? 1 : 0.4, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`relative flex flex-col rounded-xl border backdrop-blur-sm overflow-hidden transition-all duration-500 ${
+      className={`relative flex flex-col rounded-xl border backdrop-blur-sm transition-all duration-500 h-fit ${
         isActive ? config.bgGlow : ""
       }`}
       style={{
@@ -75,9 +80,9 @@ export function AgentCard({
       </div>
 
       {/* Body */}
-      <div className="flex-1 px-5 py-4 min-h-[140px]">
+      <div className="flex-1 px-5 py-4 min-h-[140px] flex flex-col">
         {!text && !isStreaming && (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full flex-1">
             <span className="text-sm text-white/20 italic">
               Awaiting deliberation...
             </span>
@@ -87,13 +92,25 @@ export function AgentCard({
           <ThinkingIndicator color={config.color} label={title || config.label} />
         )}
         {text && (
-          <p
-            className={`text-sm leading-relaxed text-white/80 ${
-              isStreaming ? "typing-cursor" : ""
-            }`}
-          >
-            {text}
-          </p>
+          <>
+            <div
+              className={`text-sm leading-relaxed text-white/80 whitespace-pre-wrap transition-all duration-300 ${
+                isStreaming ? "typing-cursor" : ""
+              } ${!isExpanded && isLong && !isStreaming ? "line-clamp-6" : ""}`}
+            >
+              {text}
+            </div>
+            
+            {!isStreaming && isLong && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="mt-4 text-xs font-medium self-start hover:underline opacity-80"
+                style={{ color: config.color }}
+              >
+                {isExpanded ? "View Less" : "View Full Argument"}
+              </button>
+            )}
+          </>
         )}
       </div>
 

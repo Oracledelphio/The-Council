@@ -74,45 +74,45 @@ export default function DecisionPage() {
       <div className="max-w-4xl mx-auto p-8 space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.02] text-xs text-white/50 tracking-widest uppercase mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.02] text-xs text-white/50 print:border-black/20 print:text-black/60 print:bg-transparent tracking-widest uppercase mb-4">
             Council Executive Report
           </div>
-          <h1 className="text-4xl font-[family-name:var(--font-heading)] font-bold">
+          <h1 className="text-4xl font-[family-name:var(--font-heading)] font-bold print:text-black">
             {decision.council_type} Deliberation
           </h1>
-          <p className="text-white/40 text-sm">
+          <p className="text-white/40 text-sm print:text-black/60">
             Recorded on {new Date(decision.created_at).toLocaleString()}
           </p>
         </div>
 
         {/* Verdict Banner */}
-        <div className={`p-6 rounded-xl border ${verdictBorder} ${verdictBg} flex flex-col items-center justify-center gap-2 text-center`}>
-          <span className="text-xs uppercase tracking-widest opacity-80 font-medium">
+        <div className={`p-6 rounded-xl border ${verdictBorder} ${verdictBg} flex flex-col items-center justify-center gap-2 text-center print:border-black/20 print:bg-transparent`}>
+          <span className="text-xs uppercase tracking-widest opacity-80 font-medium print:text-black">
             Final Verdict
           </span>
           <span className={`text-5xl font-bold tracking-tight ${verdictColor}`}>
             {decision.arbitrator.verdict}
           </span>
-          <div className="mt-2 text-sm opacity-80">
+          <div className="mt-2 text-sm opacity-80 print:text-black">
             Confidence: {decision.arbitrator.confidence}%
           </div>
         </div>
 
         {/* Executive Summary */}
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-            <h3 className="text-sm font-semibold text-[#00E5FF] mb-2 uppercase tracking-wider">
+          <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] print:border-black/20 print:bg-transparent">
+            <h3 className="text-sm font-semibold text-[#00E5FF] mb-2 uppercase tracking-wider print:text-[#008B8B]">
               Asymmetric Upside
             </h3>
-            <p className="text-white/80 leading-relaxed text-sm">
+            <p className="text-white/80 leading-relaxed text-sm print:text-black/80">
               {decision.arbitrator.asymmetric_upside}
             </p>
           </div>
-          <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-            <h3 className="text-sm font-semibold text-[#FF2A2A] mb-2 uppercase tracking-wider">
+          <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] print:border-black/20 print:bg-transparent">
+            <h3 className="text-sm font-semibold text-[#FF2A2A] mb-2 uppercase tracking-wider print:text-[#B22222]">
               Fatal Flaw
             </h3>
-            <p className="text-white/80 leading-relaxed text-sm">
+            <p className="text-white/80 leading-relaxed text-sm print:text-black/80">
               {decision.arbitrator.fatal_flaw}
             </p>
           </div>
@@ -120,21 +120,21 @@ export default function DecisionPage() {
 
         {/* Arbitrator Rationale */}
         <div className="space-y-4">
-          <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2">
+          <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2 print:border-black/20 print:text-black">
             Arbitrator&apos;s Rationale
           </h2>
-          <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap">
+          <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap print:text-black/80">
             {decision.arbitrator.rationale}
           </p>
         </div>
 
         {/* Original Proposal */}
         <div className="space-y-4">
-          <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2">
+          <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2 print:border-black/20 print:text-black">
             Original Proposal
           </h2>
-          <div className="p-6 rounded-xl border border-white/[0.06] bg-[#1A1A1A]">
-            <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap">
+          <div className="p-6 rounded-xl border border-white/[0.06] bg-[#1A1A1A] print:border-black/20 print:bg-transparent">
+            <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap print:text-black/80">
               {decision.proposal}
             </p>
           </div>
@@ -143,18 +143,18 @@ export default function DecisionPage() {
         {/* Transcripts */}
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-4">
-            <h2 className="text-sm font-[family-name:var(--font-heading)] font-semibold text-[#00E5FF] border-b border-[#00E5FF]/20 pb-2">
+            <h2 className="text-sm font-[family-name:var(--font-heading)] font-semibold text-[#00E5FF] border-b border-[#00E5FF]/20 pb-2 print:text-[#008B8B] print:border-[#008B8B]/20">
               Advocate Defense
             </h2>
-            <div className="text-white/60 leading-relaxed text-xs whitespace-pre-wrap">
+            <div className="text-white/60 leading-relaxed text-xs whitespace-pre-wrap print:text-black/70">
               {decision.advocate.output}
             </div>
           </div>
           <div className="space-y-4">
-            <h2 className="text-sm font-[family-name:var(--font-heading)] font-semibold text-[#FF2A2A] border-b border-[#FF2A2A]/20 pb-2">
+            <h2 className="text-sm font-[family-name:var(--font-heading)] font-semibold text-[#FF2A2A] border-b border-[#FF2A2A]/20 pb-2 print:text-[#B22222] print:border-[#B22222]/20">
               Inquisitor Attack
             </h2>
-            <div className="text-white/60 leading-relaxed text-xs whitespace-pre-wrap">
+            <div className="text-white/60 leading-relaxed text-xs whitespace-pre-wrap print:text-black/70">
               {decision.inquisitor.output}
             </div>
           </div>

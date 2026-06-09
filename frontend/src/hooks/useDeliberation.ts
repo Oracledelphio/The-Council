@@ -109,34 +109,44 @@ export function useDeliberation() {
         // ── Phase 2: Parallel Advocate + Inquisitor ──
         setStatus("DELIBERATING");
 
-        const advocateRes = fetch(`${API_BASE_URL}/api/v1/advocate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ proposal: proposalText, preset_id: preset }),
-        });
+        const fetchAgentWithRetry = async (
+          role: "advocate" | "inquisitor",
+          body: any,
+          streamReader: ReturnType<typeof useStreamReader>
+        ) => {
+          let lastError = null;
+          for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+              if (attempt > 1) {
+                streamReader.setText("Council Member Unavailable — Retrying...");
+              }
+              const res = await fetch(`${API_BASE_URL}/api/v1/${role}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+              });
+              if (!res.ok) throw new Error(`${role} fetch failed`);
+              
+              const text = await streamReader.startStream(res);
+              if (text.length < 150) {
+                throw new Error(`${role} output too short (${text.length} chars). Possible premature termination.`);
+              }
+              return text;
+            } catch (err) {
+              lastError = err;
+              if (attempt < 3) {
+                // Exponential backoff
+                await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 1000));
+                streamReader.reset();
+              }
+            }
+          }
+          throw new Error(`Failed to generate valid ${role} response after 3 attempts: ${lastError}`);
+        };
 
-        const inquisitorRes = fetch(`${API_BASE_URL}/api/v1/inquisitor`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            proposal: proposalText,
-            claims: claims,
-            preset_id: preset
-          }),
-        });
-
-        const [advResponse, inqResponse] = await Promise.all([
-          advocateRes,
-          inquisitorRes,
-        ]);
-
-        if (!advResponse.ok || !inqResponse.ok)
-          throw new Error("Agent streaming failed");
-
-        // Start both streams in parallel
         const [advocateText, inquisitorText] = await Promise.all([
-          advocate.startStream(advResponse),
-          inquisitor.startStream(inqResponse),
+          fetchAgentWithRetry("advocate", { proposal: proposalText, preset_id: preset }, advocate),
+          fetchAgentWithRetry("inquisitor", { proposal: proposalText, claims: claims, preset_id: preset }, inquisitor)
         ]);
 
         // ── Phase 3: Arbitrator verdict ──

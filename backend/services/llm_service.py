@@ -44,7 +44,7 @@ async def stream_chat_completion(
     config = types.GenerateContentConfig(
         system_instruction=system_prompt,
         temperature=0.8,
-        max_output_tokens=300,
+        max_output_tokens=4000,
         response_mime_type=response_mime_type,
     )
     

@@ -154,9 +154,15 @@ async def arbitrator_evaluate(req: ArbitratorRequest):
         clean_text = match.group(0) if match else response_text.replace("```json", "").replace("```", "").strip()
         
         parsed_json = json.loads(clean_text)
+        
+        # Attach debug info
+        parsed_json["_debug_raw_response"] = response_text
+        parsed_json["_debug_clean_text"] = clean_text
     except Exception as e:
         print(f"[{preset.arbitrator_title}] Failed to generate or parse JSON: {e}")
+        fallback_json["_debug_error"] = str(e)
         return fallback_json
+
 
     # Save to MongoDB
     try:

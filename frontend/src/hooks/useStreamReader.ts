@@ -48,5 +48,5 @@ export function useStreamReader() {
     return accumulatedRef.current;
   }, []);
 
-  return { text, isStreaming, isDone, startStream, reset, accumulatedRef };
+  return { text, setText, isStreaming, isDone, startStream, reset, accumulatedRef };
 }
