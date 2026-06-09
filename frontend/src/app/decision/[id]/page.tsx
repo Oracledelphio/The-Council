@@ -55,7 +55,7 @@ export default function DecisionPage() {
   
   // Find preset by name
   const presetKey = Object.keys(PRESETS).find(k => PRESETS[k as keyof typeof PRESETS].name === decision.council_type) as keyof typeof PRESETS;
-  const preset = presetKey ? PRESETS[presetKey] : PRESETS.product;
+  const preset = presetKey ? PRESETS[presetKey] : PRESETS.PRODUCT;
 
   return (
     <>
