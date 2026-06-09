@@ -174,7 +174,12 @@ export default function DecisionPage() {
         data={decision.arbitrator as any}
         preset={preset}
         proposal={decision.proposal}
-        claims={decision.claims}
+        claims={decision.claims.map((text, i) => ({
+          id: i + 1,
+          text,
+          status: "SUPPORTED",
+          attackedBy: null
+        })) as any}
         advocateText={decision.advocate.output}
         inquisitorText={decision.inquisitor.output}
         arbitratorText={""}
