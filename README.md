@@ -15,9 +15,17 @@ Council AI is a multi-agent decision intelligence platform that uses adversarial
 
 Powered by Gemini and backed by MongoDB Atlas institutional memory, the platform transforms isolated AI conversations into persistent organizational intelligence.
 
-## Demo Video
+## 🎥 Demo Video
 
-[Watch the 3-Minute Demo](REPLACE_WITH_LINK)
+<p align="center">
+  <a href="https://youtu.be/ZNMBOb-Cd58">
+    <img src="https://img.youtube.com/vi/ZNMBOb-Cd58/maxresdefault.jpg" width="85%">
+  </a>
+</p>
+
+<p align="center">
+  <strong>Click the thumbnail above to watch the 3-minute project demonstration.</strong>
+</p>
 
 ---
 
