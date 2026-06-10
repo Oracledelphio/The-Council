@@ -2,7 +2,7 @@
 > **Don't Ask One AI. Ask the Council.**
 
 [![Google Cloud](https://img.shields.io/badge/GoogleCloud-Gemini_Flash-blue?style=for-the-badge)](https://cloud.google.com/)
-[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_Vector-green?style=for-the-badge)](https://www.mongodb.com/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_%2B_Institutional_Memory-green?style=for-the-badge)](https://www.mongodb.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge)](https://fastapi.tiangolo.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-Frontend-black?style=for-the-badge)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -10,6 +10,14 @@
 Council AI transforms decision-making from a solitary, biased guess into a rigorous, multi-agent adversarial deliberation. By pitting specialized AI agents against each other—an **Advocate** to defend the proposal and an **Inquisitor** to tear it down—Council AI extracts the hidden fatal flaws and asymmetric upside of any idea before presenting the facts to the **Arbitrator** for a final, impartial verdict. 
 
 Built for the **Google Cloud Rapid Agent Hackathon (MongoDB Track)**.
+
+Council AI is a multi-agent decision intelligence platform that uses adversarial reasoning to stress-test ideas before action is taken.
+
+Powered by Gemini and backed by MongoDB Atlas institutional memory, the platform transforms isolated AI conversations into persistent organizational intelligence.
+
+## Demo Video
+
+[Watch the 3-Minute Demo](REPLACE_WITH_LINK)
 
 ---
 
@@ -29,6 +37,19 @@ Instead of asking one AI for its opinion, Council AI orchestrates a specialized 
 3. **The Arbitrator:** An impartial executive agent that evaluates the arguments, scores the confidence, and issues a final, binding verdict (FUND/KILL, APPROVE/REJECT).
 
 *Structured disagreement produces superior outcomes.*
+
+---
+
+## How Gemini Powers the Council
+
+Council AI transforms Gemini from a standard conversational assistant into a rigorous decision intelligence engine. The system leverages adversarial reasoning by assigning specific, conflicting objectives to specialized Gemini agents:
+
+* **Claim Extractor Agent:** Analyzes unstructured proposals and distills them into core, falsifiable assumptions.
+* **Advocate Agent:** Defends the proposal, highlighting its strengths and building the strongest possible case for the user's idea.
+* **Inquisitor Agent:** A ruthless adversarial agent mandated to identify the single weakest assumption and systematically destroy it.
+* **Arbitrator Agent:** An impartial executive agent that evaluates the arguments from both the Advocate and Inquisitor, scores confidence, and issues a final, binding verdict.
+
+Each role is powered by a separate Gemini context, ensuring that the AI evaluates ideas from multiple angles simultaneously rather than defaulting to a single, biased response.
 
 ---
 
@@ -83,6 +104,20 @@ graph TD
 
 MongoDB is the core engine that elevates Council AI from a transient "chatbot toy" into a **Persistent Decision Intelligence Platform**. 
 
+### Why MongoDB Matters
+
+Without a database, AI interactions are ephemeral: decisions disappear, no organizational learning occurs, and no historical precedent exists.
+
+Council AI uses MongoDB Atlas as a persistent institutional memory layer. We store:
+* Proposals
+* Extracted Claims
+* Advocate arguments
+* Inquisitor arguments
+* Arbitrator verdicts
+* Historical precedents
+
+MongoDB transforms the platform from a temporary AI conversation into a continuously improving decision intelligence system.
+
 **Why MongoDB is Critical:**
 1. **Persistent Decision Storage:** Every claim, argument, and verdict is stored in highly flexible BSON documents, perfectly accommodating the dynamic length of AI text generation.
 2. **Historical Precedents:** We query MongoDB to instantly retrieve past decisions, allowing the Arbitrator to maintain consistency across the organization's history.
@@ -90,8 +125,6 @@ MongoDB is the core engine that elevates Council AI from a transient "chatbot to
 4. **Analytics Aggregations:** We utilize MongoDB Aggregation Pipelines to calculate real-time approval rates, confidence intervals, and agent performance.
 
 ---
-
-## 📸 Screenshots
 
 ## Product Walkthrough
 
@@ -184,4 +217,4 @@ Navigate to `http://localhost:3000`.
 
 ---
 
-<p align="center">Made with ❤️ for the Google Cloud Rapid Agent Hackathon.</p>
+<p align="center">Built for the Google Cloud Rapid Agent Hackathon — MongoDB Track.</p>
