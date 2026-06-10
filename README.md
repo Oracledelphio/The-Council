@@ -93,15 +93,38 @@ MongoDB is the core engine that elevates Council AI from a transient "chatbot to
 
 ## 📸 Screenshots
 
-| Dashboard & Precedents | Adversarial Deliberation |
-|:---:|:---:|
-| ![Home Screen](./docs/home.png) <br> *Home screen showing active councils.* | ![Deliberation Flow](./docs/deliberation.png) <br> *Real-time streaming debate.* |
+## Product Walkthrough
 
-| Executive Verdict | Analytics Dashboard |
+### Dashboard & Institutional Memory
+
+| Dashboard | Live Deliberation |
 |:---:|:---:|
-| ![Verdict Screen](./docs/verdict.png) <br> *Final Arbitrator verdict.* | ![Analytics Dashboard](./docs/analytics.png) <br> *MongoDB-powered insights.* |
+| ![Dashboard](./docs/home.png) | ![Deliberation](./docs/deliberation.png) |
+| *Executive workspace featuring council selection, proposal submission, and MongoDB-powered institutional memory.* | *Real-time adversarial reasoning between specialized AI council members before arbitration.* |
 
 ---
+
+### Decision Intelligence Engine
+
+| Verdict Delivery | Historical Executive Reports |
+|:---:|:---:|
+| ![Verdict](./docs/preview.png) | ![Historical Report](./docs/historical_verdict.png) |
+| *Final council verdict with confidence scoring, fatal flaw analysis, asymmetric upside, and arbitrator rationale.* | *Persistent decision records stored in MongoDB Atlas and accessible as institutional memory.* |
+
+---
+
+### Executive Analytics
+
+<p align="center">
+  <img src="./docs/analytics.png" width="90%">
+</p>
+
+<p align="center">
+  <em>
+    Real-time analytics generated from MongoDB institutional memory, including decision outcomes,
+    council utilization, and organizational intelligence metrics.
+  </em>
+</p>
 
 ## 🚀 Installation & Local Development
 
