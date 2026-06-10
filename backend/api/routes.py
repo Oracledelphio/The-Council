@@ -69,10 +69,6 @@ async def advocate_stream(req: ProposalRequest):
         ):
             full_response += chunk
             yield chunk
-            
-        print("=== RAW ADVOCATE RESPONSE ===")
-        print(full_response)
-        print("==============================")
 
     return StreamingResponse(event_generator(), media_type="text/plain")
 
@@ -80,19 +76,9 @@ async def advocate_stream(req: ProposalRequest):
 @router.post("/inquisitor")
 async def inquisitor_stream(req: InquisitorRequest):
     """Stream the Inquisitor's attack."""
-    print("=== INQUISITOR VARIABLE VALIDATION ===")
-    print(f"PROPOSAL: {repr(req.proposal)}")
-    print(f"CLAIMS: {repr(req.claims)}")
-    print("======================================")
-
     preset = get_preset(req.preset_id)
     user_prompt = build_inquisitor_user_prompt(req.proposal, req.claims)
     system_prompt = get_inquisitor_system_prompt(preset)
-    
-    print("=== INQUISITOR PROMPTS ===")
-    print(f"SYSTEM PROMPT:\n{system_prompt}")
-    print(f"USER PROMPT:\n{user_prompt}")
-    print("==========================")
     
     fallback_text = "[TARGETED_CLAIM: 1]\n\nThe Council is experiencing unusually high demand. Please try again in a moment."
 
@@ -106,10 +92,6 @@ async def inquisitor_stream(req: InquisitorRequest):
         ):
             full_response += chunk
             yield chunk
-            
-        print("=== RAW INQUISITOR RESPONSE ===")
-        print(full_response)
-        print("==============================")
 
     return StreamingResponse(event_generator(), media_type="text/plain")
 
@@ -147,27 +129,18 @@ async def arbitrator_evaluate(req: ArbitratorRequest):
             max_output_tokens=4000
         )
         
-        print("=== RAW ARBITRATOR RESPONSE ===")
-        print(response_text)
-        print("===============================")
-        
         # Clean the response text from potential markdown blocks
         import re
         match = re.search(r'\{[\s\S]*\}', response_text)
         clean_text = match.group(0) if match else response_text.replace("```json", "").replace("```", "").strip()
         
         parsed_json = json.loads(clean_text)
-        
-        # Attach debug info
-        parsed_json["_debug_raw_response"] = response_text
-        parsed_json["_debug_clean_text"] = clean_text
     except Exception as e:
         print(f"[{preset.arbitrator_title}] Failed to generate or parse JSON: {e}")
         error_msg = str(e)
         if "429" in error_msg or "RESOURCE_EXHAUSTED" in error_msg or "quota" in error_msg.lower():
             fallback_json["rationale"] = "Free tier API Quota exceeded. Please try again later."
             fallback_json["fatal_flaw"] = "API Quota Limit Reached."
-        fallback_json["_debug_error"] = str(e)
         return fallback_json
 
 

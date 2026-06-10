@@ -221,40 +221,6 @@ export default function CruciblePage() {
                   ⚠ {deliberation.error}
                 </motion.div>
               )}
-
-              {/* Developer Debug Toggle (Hidden until double clicked on the small dot) */}
-              <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 print:hidden">
-                <div 
-                  className="w-2 h-2 rounded-full bg-white/5 hover:bg-white/20 cursor-crosshair transition-colors"
-                  onDoubleClick={() => {
-                    (window as any).debugMode = !(window as any).debugMode;
-                    document.getElementById("debug-panel")?.classList.toggle("hidden");
-                  }}
-                  title="Double-click for Developer Debug Mode"
-                />
-                <div id="debug-panel" className="hidden bg-black/90 p-4 rounded border border-[#00E5FF]/30 w-[400px] max-h-[500px] overflow-auto text-[10px] font-mono text-[#00E5FF]">
-                  <h3 className="font-bold mb-2 uppercase border-b border-[#00E5FF]/20 pb-1">Developer Debug Mode</h3>
-                  <div className="space-y-2">
-                    <div><strong>STATUS:</strong> {status}</div>
-                    <div><strong>ADVOCATE LEN:</strong> {deliberation.advocate.text.length}</div>
-                    <div><strong>INQUISITOR LEN:</strong> {deliberation.inquisitor.text.length}</div>
-                    <details>
-                      <summary>RAW ADVOCATE</summary>
-                      <pre className="whitespace-pre-wrap mt-1 opacity-70">{deliberation.advocate.text}</pre>
-                    </details>
-                    <details>
-                      <summary>RAW INQUISITOR</summary>
-                      <pre className="whitespace-pre-wrap mt-1 opacity-70">{deliberation.inquisitor.text}</pre>
-                    </details>
-                    <details>
-                      <summary>ARBITRATOR DEBUG DATA</summary>
-                      <pre className="whitespace-pre-wrap mt-1 opacity-70">
-                        {JSON.stringify((deliberation.verdictData as any)?._debug_raw_response || "N/A", null, 2)}
-                      </pre>
-                    </details>
-                  </div>
-                </div>
-              </div>
             </motion.div>
           )}
         </div>
