@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { AGENT_CONFIG } from "@/lib/constants";
+import SoftAurora from "@/components/ui/SoftAurora";
 
 export default function LandingPage() {
   const agents = [
@@ -25,18 +26,25 @@ export default function LandingPage() {
 
   return (
     <main className="flex-1 flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      {/* Subtle background grid */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
-        }}
-      />
-
-      {/* Ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-white/[0.02] blur-3xl" />
+      {/* Animated Aurora Background */}
+      <div className="absolute inset-0 z-0">
+        <SoftAurora
+          speed={0.6}
+          scale={1.5}
+          brightness={1}
+          color1="#f7f7f7"
+          color2="#e100ff"
+          noiseFrequency={2.5}
+          noiseAmplitude={1}
+          bandHeight={0.5}
+          bandSpread={1}
+          octaveDecay={0.1}
+          layerOffset={0}
+          colorSpeed={1}
+          enableMouseInteraction
+          mouseInfluence={0.25}
+        />
+      </div>
 
       <div className="relative z-10 max-w-4xl mx-auto text-center">
         {/* Badge */}
