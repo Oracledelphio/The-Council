@@ -73,7 +73,7 @@ export default function CruciblePage() {
 
       {/* Content */}
       <div className="flex-1 flex flex-col items-center px-4 sm:px-6 py-8 overflow-y-auto print:p-0 print:overflow-visible">
-        <div className="w-full max-w-5xl mx-auto space-y-6">
+        <div className="w-full max-w-5xl mx-auto space-y-8">
           <AnimatePresence mode="wait">
             {/* Phase: IDLE — Show proposal form */}
             {status === "IDLE" && (

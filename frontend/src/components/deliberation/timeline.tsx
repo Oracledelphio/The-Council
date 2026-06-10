@@ -50,7 +50,7 @@ export function Timeline({ status }: TimelineProps) {
                 className={`w-2.5 h-2.5 rounded-full z-10 transition-colors duration-500`}
               />
               <span
-                className={`absolute top-5 text-[10px] font-medium uppercase tracking-[0.1em] w-32 text-center transition-colors duration-500 ${
+                className={`mt-3 text-[10px] font-medium uppercase tracking-[0.1em] w-32 text-center transition-colors duration-500 ${
                   isActive ? "text-white/80" : "text-white/20"
                 }`}
               >

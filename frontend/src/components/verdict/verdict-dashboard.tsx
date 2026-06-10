@@ -35,7 +35,7 @@ export function VerdictDashboard({
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full rounded-xl border border-[#D4AF37]/20 bg-[#D4AF37]/[0.02] overflow-hidden print:hidden"
+        className="w-full rounded-xl border border-zinc-700/50 bg-zinc-800 shadow-lg shadow-black/20 overflow-hidden print:hidden"
       >
         {/* Streaming arbitrator text (shown while judging) */}
         {isStreaming && !data && (
@@ -71,7 +71,7 @@ export function VerdictDashboard({
         {data && (
           <>
             <VerdictStamp verdict={data.verdict} />
-            <div className="p-6">
+            <div className="p-8 space-y-8">
               <Scorecard data={data} />
               
               <div className="mt-8 flex justify-center border-t border-white/[0.05] pt-6">

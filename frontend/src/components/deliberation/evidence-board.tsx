@@ -29,8 +29,8 @@ export function EvidenceBoard({ claims }: EvidenceBoardProps) {
           const isInvalidated = claim.status === "INVALIDATED";
           const isSupported = claim.status === "SUPPORTED";
 
-          let borderClass = "border-white/[0.06]";
-          let bgClass = "bg-white/[0.02]";
+          let borderClass = "border-zinc-700/50";
+          let bgClass = "bg-zinc-800 shadow-lg shadow-black/20";
           let badgeColor = "text-white/40 border-white/10";
           
           if (isChallenged) {
@@ -51,7 +51,7 @@ export function EvidenceBoard({ claims }: EvidenceBoardProps) {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
-              className={`relative p-4 rounded-lg border transition-all duration-500 ${borderClass} ${bgClass}`}
+              className={`relative p-4 rounded-xl border transition-all duration-500 ${borderClass} ${bgClass}`}
             >
               <div className="flex items-start justify-between mb-3">
                 <span

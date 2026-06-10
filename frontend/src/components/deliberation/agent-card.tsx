@@ -34,16 +34,12 @@ export function AgentCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: isActive ? 1 : 0.4, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`relative flex flex-col rounded-xl border backdrop-blur-sm transition-all duration-500 h-fit ${
-        isActive ? config.bgGlow : ""
+      className={`relative flex flex-col rounded-xl border shadow-lg shadow-black/20 hover:border-zinc-600 hover:bg-zinc-800/90 transition-all duration-200 h-fit backdrop-blur-sm ${
+        isActive ? config.bgGlow : "bg-zinc-800 border-zinc-700/50"
       }`}
       style={{
-        borderColor: isActive
-          ? `${config.color}30`
-          : "rgba(255,255,255,0.06)",
-        backgroundColor: isActive
-          ? config.colorMuted
-          : "rgba(255,255,255,0.02)",
+        borderColor: isActive ? `${config.color}30` : undefined,
+        backgroundColor: isActive ? config.colorMuted : undefined,
       }}
     >
       {/* Header */}

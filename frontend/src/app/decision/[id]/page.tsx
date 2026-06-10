@@ -78,7 +78,7 @@ export default function DecisionPage() {
           </button>
         </div>
 
-        <div className="max-w-4xl mx-auto p-8 space-y-12">
+        <div className="max-w-4xl mx-auto space-y-8 mt-6 mb-12">
           {/* Header */}
           <div className="text-center space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.02] text-xs text-white/50 tracking-widest uppercase mb-4">
@@ -107,7 +107,7 @@ export default function DecisionPage() {
 
           {/* Executive Summary */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+            <div className="p-6 rounded-xl border border-zinc-700/50 bg-zinc-800 shadow-lg shadow-black/20">
               <h3 className="text-sm font-semibold text-[#00E5FF] mb-2 uppercase tracking-wider">
                 Asymmetric Upside
               </h3>
@@ -115,7 +115,7 @@ export default function DecisionPage() {
                 {decision.arbitrator.asymmetric_upside}
               </p>
             </div>
-            <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+            <div className="p-6 rounded-xl border border-zinc-700/50 bg-zinc-800 shadow-lg shadow-black/20">
               <h3 className="text-sm font-semibold text-[#FF2A2A] mb-2 uppercase tracking-wider">
                 Fatal Flaw
               </h3>
@@ -140,7 +140,7 @@ export default function DecisionPage() {
             <h2 className="text-lg font-[family-name:var(--font-heading)] font-semibold border-b border-white/[0.06] pb-2">
               Original Proposal
             </h2>
-            <div className="p-6 rounded-xl border border-white/[0.06] bg-[#1A1A1A]">
+            <div className="p-6 rounded-xl border border-zinc-700/50 bg-zinc-800 shadow-lg shadow-black/20">
               <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap">
                 {decision.proposal}
               </p>

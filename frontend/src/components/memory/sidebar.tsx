@@ -69,8 +69,8 @@ export function MemorySidebar() {
 
   return (
     <>
-      <aside className="w-64 border-r border-white/[0.06] bg-[#121212] flex flex-col h-full print:hidden">
-        <div className="p-4 border-b border-white/[0.06] flex flex-col gap-3">
+      <aside className="w-64 border-r border-zinc-800 bg-zinc-950 flex flex-col h-full print:hidden">
+        <div className="p-4 border-b border-zinc-800 flex flex-col gap-3">
           <Link
             href="/"
             className="font-[family-name:var(--font-heading)] font-semibold text-white/90 text-lg hover:text-white transition-colors"
@@ -130,8 +130,8 @@ export function MemorySidebar() {
                                 href={`/decision/${d.decision_id}`}
                                 className={`block p-2 rounded border transition-colors ${
                                   isActive
-                                    ? "bg-white/[0.08] border-white/20"
-                                    : "bg-white/[0.02] border-white/[0.04] hover:border-white/20 hover:bg-white/[0.06]"
+                                    ? "bg-zinc-800 border-zinc-600 shadow-md shadow-black/20"
+                                    : "bg-white/[0.02] border-white/[0.04] hover:border-zinc-600 hover:bg-zinc-800/90"
                                 }`}
                               >
                                 <div className="flex items-center justify-between mb-1">
@@ -190,7 +190,7 @@ export function MemorySidebar() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#1A1A1A] border border-white/10 rounded-xl p-6 max-w-sm w-full shadow-2xl"
+              className="bg-zinc-800 border border-zinc-700/50 rounded-xl p-6 max-w-sm w-full shadow-2xl shadow-black/40"
             >
               <h3 className="text-lg font-bold text-white mb-2 font-[family-name:var(--font-heading)]">Delete Decision?</h3>
               <p className="text-sm text-white/60 mb-6 leading-relaxed">
