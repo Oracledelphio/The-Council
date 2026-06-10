@@ -106,7 +106,7 @@ MongoDB is the core engine that elevates Council AI from a transient "chatbot to
 
 ### Decision Intelligence Engine
 
-| Verdict Delivery | Historical Executive Reports |
+| Preview Page | Historical Executive Reports |
 |:---:|:---:|
 | ![Preview](./docs/preview.png) | ![Historical Report](./docs/historical_verdict.png) |
 | *Preview your ideas and pitch to a Panel that matters in a click* | *Persistent decision records stored in MongoDB Atlas and accessible as institutional memory.* |
