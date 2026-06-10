@@ -108,8 +108,8 @@ MongoDB is the core engine that elevates Council AI from a transient "chatbot to
 
 | Verdict Delivery | Historical Executive Reports |
 |:---:|:---:|
-| ![Verdict](./docs/preview.png) | ![Historical Report](./docs/historical_verdict.png) |
-| *Final council verdict with confidence scoring, fatal flaw analysis, asymmetric upside, and arbitrator rationale.* | *Persistent decision records stored in MongoDB Atlas and accessible as institutional memory.* |
+| ![Preview](./docs/preview.png) | ![Historical Report](./docs/historical_verdict.png) |
+| *Preview your ideas and pitch to a Panel that matters in a click* | *Persistent decision records stored in MongoDB Atlas and accessible as institutional memory.* |
 
 ---
 
